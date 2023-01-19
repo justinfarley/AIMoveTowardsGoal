@@ -1,0 +1,2 @@
+# AIMoveTowardsGoal
+first ever AI
