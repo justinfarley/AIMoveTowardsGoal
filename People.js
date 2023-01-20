@@ -1,12 +1,4 @@
-function mutate(x) {
-    if (random(1) < 0.1) {
-      let offset = randomGaussian() * 0.5;
-      let newx = x + offset;
-      return newx;
-    } else {
-      return x;
-    }
-  }
+
 class Person{
     constructor(age, name, canDrive, hairColor, brain){
         this.age = age;
@@ -104,28 +96,24 @@ class Person{
     moveLeft(){
         this.pos.x -= 1;
     }
+    mutate(){
+        this.brain.mutate(0.1);
+    }
     Update(){
         this.score++;
         if(!this.isMoving){
             this.score--;
         }
         this.think(goal);
-        fill(this.color);
-        ellipse(this.pos.x, this.pos.y, 100, 100);
-        fill(0);
-        textSize(32);
-        textAlign(CENTER);
-        goalUpdate(goal);
-        text(this.name + ", " + this.age, this.pos.x, this.pos.y - 60);
+        this.score = 1 / calculateDistanceFromGoal(this.pos.x, this.pos.y);
         if(calculateDistanceFromGoal(this.pos.x, this.pos.y) >= 750){
             this.isMoving = false;
+            this.score -= 1000;
             savedPeople.push(currentPopulation.splice(currentPopulation.indexOf(this),1)[0]);
         }
         if(calculateDistanceFromGoal(this.pos.x, this.pos.y) <= 50){
             //reward
-            this.score += 25;
-            this.pos.x = 500;
-            this.pos.y = 500;
+            this.score += 1000;
             
         }
 
@@ -134,5 +122,14 @@ class Person{
             nextGeneration();
         }
     
+    }
+    Show(){
+        fill(this.color);
+        ellipse(this.pos.x, this.pos.y, 100, 100);
+        fill(0);
+        textSize(32);
+        textAlign(CENTER);
+        goalUpdate(goal);
+        text(this.name + ", " + this.age, this.pos.x, this.pos.y - 60);
     }
 }

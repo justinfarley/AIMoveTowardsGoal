@@ -76,7 +76,7 @@ class NeuralNetwork {
     return output.toArray();
   }
 
-  setLearningRate(learning_rate = 0.1) {
+  setLearningRate(learning_rate = 0.5) {
     this.learning_rate = learning_rate;
   }
 
@@ -166,11 +166,14 @@ class NeuralNetwork {
   }
 
   // Accept an arbitrary function for mutation
-  mutate(func) {
-    this.weights_ih.map(func);
-    this.weights_ho.map(func);
-    this.bias_h.map(func);
-    this.bias_o.map(func);
+  mutate(x) {
+    if (random(1) < 0.1) {
+      let offset = randomGaussian() * 0.5;
+      let newx = x + offset;
+      return newx;
+    } else {
+      return x;
+    }
   }
 
 

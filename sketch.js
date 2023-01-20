@@ -19,12 +19,14 @@ let goal;
 let qTable;
 let bg;
 
+let gameTimer = 20;
+
 let savedPeople = [];
 let currentPopulation = [];
-let TOTAL = 50;
+let TOTAL = 500;
 
 let state;
-
+let slider;
 let actions;
 
 
@@ -84,21 +86,44 @@ function pickColor(){
 // }
 
 function setup() {
-  createCanvas(SCREENX,SCREENY);
-  frameRate(60);
-  push();
-  goal = createGoal();
-  goalUpdate();
-  populate();
-  pop();
-  bg = loadImage('/assets/bg.jpg');
+    createCanvas(SCREENX,SCREENY);
+    slider = createSlider(1,100, 1);
+    push();
+    goal = createGoal();
+    goalUpdate();
+    populate();
+    pop();
+    bg = loadImage('/assets/bg.jpg');
 }
 
 function draw() {
+    for(let j = 0; j < slider.value(); j++){
+        if(currentPopulation.length == 0){
+            nextGeneration();
+        }
+        for(let i = 0; i < currentPopulation.length; i++){
+            if(currentPopulation[i] != null){
+            currentPopulation[i].Update();
+            }
+        }
+        if (frameCount % 60 == 0 && gameTimer > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+            gameTimer--;
+        }
+        if(gameTimer <= 0){
+            gameTimer = 20;
+            for(let i = 0; i < currentPopulation.length;i++){
+                savedPeople.push(i);
+            }
+            currentPopulation = [];
+        }
+    }
+
+    //drawing
+
     background(bg)
     goalUpdate();
     for(let i = 0; i < currentPopulation.length; i++){
-        currentPopulation[i].Update();
+        currentPopulation[i].Show();
     }
 }
 
@@ -156,7 +181,6 @@ function awayFromGoal(){
     let posx = random(100,1400);
     let posy = random(100,900);
     while((goal.pos.x + 50 - posx <= 200 && goal.pos.x + 50 - posx >= -200) && (goal.pos.y + 60 - posy <= 200 && goal.pos.y + 60 - posy >= -200)){
-        console.log("HEHEH" + goal.pos.x + 50 + " " + posx);
         if((goal.pos.x - posx <= 200 && goal.pos.x + 50 - posx >= -200)){
             posx = random(100,1400);
         }
